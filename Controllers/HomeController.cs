@@ -14,6 +14,8 @@ namespace Gestor_Proyectos_Academicos.Controllers
 
             // holaaaa
 
+            // soy ari
+
         }
 
         public IActionResult Index()
