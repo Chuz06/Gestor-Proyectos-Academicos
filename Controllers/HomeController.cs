@@ -21,6 +21,7 @@ namespace Gestor_Proyectos_Academicos.Controllers
         public IActionResult Index()
         {
             return View();
+
         }
 
         public IActionResult Privacy()
