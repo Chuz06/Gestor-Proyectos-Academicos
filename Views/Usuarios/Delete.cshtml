@@ -1,0 +1,26 @@
+﻿@model Gestor_Proyectos_Academicos.Models.Usuario
+
+@{
+    ViewData["Title"] = "Eliminar usuario";
+}
+
+<h2>Eliminar usuario</h2>
+
+<p>¿Está seguro que desea eliminar el usuario <strong>@Model.Nombre</strong>?</p>
+
+<dl class="row">
+    <dt class="col-sm-2">Nombre</dt>
+    <dd class="col-sm-10">@Model.Nombre</dd>
+
+    <dt class="col-sm-2">Correo</dt>
+    <dd class="col-sm-10">@Model.Correo</dd>
+
+    <dt class="col-sm-2">Rol</dt>
+    <dd class="col-sm-10">@Model.Rol?.NombreRol</dd>
+</dl>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="IdUsuario" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Gestor_Proyectos_Academicos.Models.Rol>
+
+@{
+    ViewData["Title"] = "Roles";
+}
+
+<h2>Roles</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Crear nuevo rol</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(m => m.First().IdRol)</th>
+            <th>@Html.DisplayNameFor(m => m.First().NombreRol)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.IdRol</td>
+                <td>@item.NombreRol</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.IdRol">Detalles</a> |
+                    <a asp-action="Edit" asp-route-id="@item.IdRol">Editar</a> |
+                    <a asp-action="Delete" asp-route-id="@item.IdRol">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

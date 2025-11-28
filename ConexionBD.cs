@@ -10,8 +10,9 @@ namespace Gestor_Proyectos_Academicos
         public ConexionBD()
         {
             
-            string cadena = "Server=localhost;Database=GestorProyectos; Integrated Security=True; Encrypt=False;";
+            string cadena = "Server=DESKTOP-48TH8CI;Database=GestorProyectos;Integrated Security=True;Encrypt=False;TrustServerCertificate=True;"; 
             conexion = new SqlConnection(cadena);
+
         }
 
        

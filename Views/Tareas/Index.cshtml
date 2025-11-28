@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Gestor_Proyectos_Academicos.Models.Tarea>
+
+@{
+    ViewData["Title"] = "Tareas";
+}
+
+<h2>Tareas</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Crear nueva tarea</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Fecha límite</th>
+            <th>Estado</th>
+            <th>Id Proyecto</th>
+            <th>Id Asignado A</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.IdTarea</td>
+                <td>@item.Titulo</td>
+                <td>@item.Descripcion</td>
+                <td>@item.FechaLimite?.ToString("yyyy-MM-dd")</td>
+                <td>@item.Estado</td>
+                <td>@item.IdProyecto</td>
+                <td>@item.IdAsignadoA</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.IdTarea">Detalles</a> |
+                    <a asp-action="Edit" asp-route-id="@item.IdTarea">Editar</a> |
+                    <a asp-action="Delete" asp-route-id="@item.IdTarea">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

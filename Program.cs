@@ -1,17 +1,30 @@
-using Gestor_Proyectos_Academicos;
+﻿using Gestor_Proyectos_Academicos.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// 🔹 Conexión a BD (ya lo tenías)
+builder.Services.AddDbContext<GestorProyectosContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// 🔹 MVC
 builder.Services.AddControllersWithViews();
+
+// 🔹 Autenticación con cookies
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Cuenta/Login";            // dónde manda cuando no está logueado
+        options.AccessDeniedPath = "/Cuenta/Denegado";  // página de acceso denegado
+    });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -20,6 +33,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// 🔹 IMPORTANTE: primero autenticación, luego autorización
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
@@ -27,4 +42,3 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
-

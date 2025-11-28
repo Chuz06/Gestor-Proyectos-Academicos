@@ -1,0 +1,15 @@
+﻿@model Gestor_Proyectos_Academicos.Models.Tarea
+
+@{
+    ViewData["Title"] = "Eliminar tarea";
+}
+
+<h2>Eliminar tarea</h2>
+
+<p>¿Está seguro que desea eliminar la tarea <strong>@Model.Titulo</strong>?</p>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="IdTarea" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
