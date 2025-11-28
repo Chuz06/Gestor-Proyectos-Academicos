@@ -1,0 +1,15 @@
+﻿@model Gestor_Proyectos_Academicos.Models.Proyecto
+
+@{
+    ViewData["Title"] = "Eliminar proyecto";
+}
+
+<h2>Eliminar proyecto</h2>
+
+<p>¿Está seguro que desea eliminar el proyecto <strong>@Model.Nombre</strong>?</p>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="IdProyecto" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

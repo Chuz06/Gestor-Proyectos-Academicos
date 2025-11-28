@@ -1,0 +1,26 @@
+﻿@model Gestor_Proyectos_Academicos.Models.ProyectosEstudiantes
+
+@{
+    ViewData["Title"] = "Nueva Asignación";
+}
+
+<h2>Nueva asignación de estudiante a proyecto</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label for="IdProyecto">Proyecto</label>
+        <select asp-for="IdProyecto" class="form-control"
+                asp-items="ViewBag.IdProyecto"></select>
+    </div>
+
+    <div class="form-group">
+        <label for="IdEstudiante">Estudiante</label>
+        <select asp-for="IdEstudiante" class="form-control"
+                asp-items="ViewBag.IdEstudiante"></select>
+    </div>
+
+    <br />
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Volver</a>
+</form>

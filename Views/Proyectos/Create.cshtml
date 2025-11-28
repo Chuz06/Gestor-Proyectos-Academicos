@@ -1,0 +1,40 @@
+﻿@model Gestor_Proyectos_Academicos.Models.Proyecto
+
+@{
+    ViewData["Title"] = "Crear proyecto";
+}
+
+<h2>Crear proyecto</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="Nombre" class="control-label"></label>
+        <input asp-for="Nombre" class="form-control" />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Descripcion" class="control-label"></label>
+        <textarea asp-for="Descripcion" class="form-control"></textarea>
+        <span asp-validation-for="Descripcion" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FechaInicio" class="control-label"></label>
+        <input asp-for="FechaInicio" type="date" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FechaFin" class="control-label"></label>
+        <input asp-for="FechaFin" type="date" class="form-control" />
+    </div>
+
+    <!-- Si quieres usar IdProfesor -->
+    <div class="form-group">
+        <label asp-for="IdProfesor" class="control-label"></label>
+        <input asp-for="IdProfesor" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success mt-2">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary mt-2">Volver</a>
+</form>
