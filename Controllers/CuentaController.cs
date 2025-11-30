@@ -11,7 +11,7 @@ using System.Text;
 
 namespace Gestor_Proyectos_Academicos.Controllers
 {
-    [AllowAnonymous] // permite entrar al Login sin estar autenticado
+    [AllowAnonymous]  
     public class CuentaController : Controller
     {
         private readonly GestorProyectosContext _context;
@@ -21,19 +21,19 @@ namespace Gestor_Proyectos_Academicos.Controllers
             _context = context;
         }
 
-        // ================== LOGIN GET ==================
+        // LOGIN GET 
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
 
-        // ================== LOGIN POST ==================
+        // LOGIN POST 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(string correo, string contrasena)
         {
-            // 1) Buscar usuario por correo
+            // usuario por correo
             var usuario = await _context.Usuarios
                 .Include(u => u.Rol)
                 .FirstOrDefaultAsync(u => u.Correo == correo);
@@ -44,7 +44,7 @@ namespace Gestor_Proyectos_Academicos.Controllers
                 return View();
             }
 
-            // 2) Calcular hash SHA256 de la contraseña ingresada
+            //  Calcula hash SHA256 de la contraseña 
             if (string.IsNullOrWhiteSpace(contrasena) ||
                 string.IsNullOrWhiteSpace(usuario.Contrasena))
             {
@@ -54,14 +54,14 @@ namespace Gestor_Proyectos_Academicos.Controllers
 
             var hashIngresado = ComputeSha256Hash(contrasena);
 
-            // 3) Comparar con lo que está en la BD (el script ya guardó SHA256 ahí)
+            //  Comparar con lo que está en la BD 
             if (!string.Equals(hashIngresado, usuario.Contrasena, StringComparison.OrdinalIgnoreCase))
             {
                 ViewBag.Error = "Correo o contraseña incorrectos";
                 return View();
             }
 
-            // 4) Claims del usuario
+            //  Claims del usuario
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, usuario.Nombre),
@@ -76,17 +76,17 @@ namespace Gestor_Proyectos_Academicos.Controllers
 
             var principal = new ClaimsPrincipal(claimsIdentity);
 
-            // 5) Firmar cookie
+            //  Firmar cookie
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 principal
             );
 
-            // 6) Redirigir al Home (o donde quieras)
+            //  Redirigir al Home 
             return RedirectToAction("Index", "Home");
         }
 
-        // ================== LOGOUT ==================
+        //  LOGOUT 
         [Authorize]
         public async Task<IActionResult> Logout()
         {
@@ -94,13 +94,13 @@ namespace Gestor_Proyectos_Academicos.Controllers
             return RedirectToAction("Login", "Cuenta");
         }
 
-        // ================== ACCESS DENIED ==================
+        // ACCESS DENIED 
         public IActionResult Denegado()
         {
             return View();
         }
 
-        // ================== HELPER SHA256 ==================
+        // HELPER SHA256 
         private string ComputeSha256Hash(string rawData)
         {
             using (var sha256 = SHA256.Create())
@@ -110,7 +110,7 @@ namespace Gestor_Proyectos_Academicos.Controllers
                 var builder = new StringBuilder();
                 foreach (var b in bytes)
                 {
-                    // IMPORTANTE: "X2" = HEX MAYÚSCULAS
+                    //"X2" = HEX MAYÚSCULAS
                     builder.Append(b.ToString("X2"));
                 }
 

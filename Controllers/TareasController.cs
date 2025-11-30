@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Gestor_Proyectos_Academicos.Controllers
 {
@@ -17,19 +19,25 @@ namespace Gestor_Proyectos_Academicos.Controllers
             _context = context;
         }
 
-        // GET: Tareas
+        //  LISTA 
         public async Task<IActionResult> Index()
         {
-            var tareas = await _context.Tareas.ToListAsync();
+            var tareas = await _context.Tareas
+                .Include(t => t.Proyecto)
+                .Include(t => t.AsignadoA)
+                .ToListAsync();
+
             return View(tareas);
         }
 
-        // GET: Tareas/Details/5
+        //  DETALLES
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
 
             var tarea = await _context.Tareas
+                .Include(t => t.Proyecto)
+                .Include(t => t.AsignadoA)
                 .FirstOrDefaultAsync(t => t.IdTarea == id);
 
             if (tarea == null) return NotFound();
@@ -37,105 +45,168 @@ namespace Gestor_Proyectos_Academicos.Controllers
             return View(tarea);
         }
 
-        // GET: Tareas/Create
-        public IActionResult Create()
+        //LISTA DE ESTADOS 
+        private IEnumerable<SelectListItem> ObtenerEstados()
         {
-            // Todos los proyectos
-            ViewBag.Proyectos = new SelectList(_context.Proyectos, "IdProyecto", "Nombre");
-
-            // Todos los usuarios con rol Estudiante (asumo IdRol = 2 para estudiantes)
-            ViewBag.Estudiantes = new SelectList(
-                _context.Usuarios.Where(u => u.IdRol == 2),
-                "IdUsuario",
-                "Nombre"
-            );
-
-            return View();
+            return new List<SelectListItem>
+                {
+                    new SelectListItem { Value = "Pendiente",   Text = "Pendiente" },
+                    new SelectListItem { Value = "En Progreso", Text = "En Progreso" },
+                    new SelectListItem { Value = "Completada",  Text = "Completada" }
+                };
         }
 
+        private void CargarCombos(Tarea? tarea = null)
+        {
+            ViewBag.Proyectos = new SelectList(
+                _context.Proyectos,
+                "IdProyecto",
+                "Nombre",
+                tarea?.IdProyecto
+            );
 
-        // POST: Tareas/Create
+            ViewBag.Estudiantes = new SelectList(
+                _context.Usuarios.Where(u => u.IdRol == 3),
+                "IdUsuario",
+                "Nombre",
+                tarea?.IdAsignadoA
+            );
+
+            ViewBag.Estados = new SelectList(
+                ObtenerEstados(),
+                "Value",
+                "Text",
+                tarea?.Estado ?? "Pendiente"
+            );
+        }
+
+        //  CREAR GET 
+        public IActionResult Create()
+        {
+            CargarCombos();
+            return View(new Tarea
+            {
+                Estado = "Pendiente"
+            });
+        }
+
+        //   CREAR POST     
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Tarea tarea)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+            {
+                CargarCombos(tarea);
+                return View(tarea);
+            }
+
+            try
             {
                 _context.Add(tarea);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(tarea);
+            catch (DbUpdateException ex)
+            {
+                
+                ModelState.AddModelError(string.Empty,
+                    $"Error al guardar la tarea: {ex.InnerException?.Message ?? ex.Message}");
+                CargarCombos(tarea);
+                return View(tarea);
+            }
         }
 
-        // GET: Tareas/Edit/5
+        //  EDITAR GET 
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
 
-            var tarea = await _context.Tareas.FindAsync(id);
+            var tarea = await _context.Tareas
+                .AsNoTracking()
+                .FirstOrDefaultAsync(t => t.IdTarea == id);
+
             if (tarea == null) return NotFound();
 
-            // Proyectos con el proyecto actual seleccionado
-            ViewBag.Proyectos = new SelectList(
-                _context.Proyectos,
-                "IdProyecto",
-                "Nombre",
-                tarea.IdProyecto
-            );
+            ViewBag.Proyectos = new SelectList(_context.Proyectos, "IdProyecto", "Nombre", tarea.IdProyecto);
 
-            // Estudiantes con el estudiante actual seleccionado
             ViewBag.Estudiantes = new SelectList(
-                _context.Usuarios.Where(u => u.IdRol == 2),
+                _context.Usuarios.Where(u => u.IdRol == 3),
                 "IdUsuario",
                 "Nombre",
                 tarea.IdAsignadoA
             );
 
+            ViewBag.Estados = new SelectList(ObtenerEstados(), "Value", "Text", tarea.Estado);
+
             return View(tarea);
         }
 
-
-        // POST: Tareas/Edit/5
+        //  EDITAR POST 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Tarea tarea)
+        public async Task<IActionResult> Edit(int id, [Bind("IdTarea,Titulo,Descripcion,FechaLimite,Estado,IdProyecto,IdAsignadoA")] Tarea modelo)
         {
-            if (id != tarea.IdTarea) return NotFound();
-
-            if (ModelState.IsValid)
+            if (id != modelo.IdTarea)
             {
-                try
-                {
-                    _context.Update(tarea);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TareaExists(tarea.IdTarea))
-                        return NotFound();
-                    else
-                        throw;
-                }
+                return NotFound();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                
+                ViewBag.Proyectos = new SelectList(_context.Proyectos, "IdProyecto", "Nombre", modelo.IdProyecto);
+                ViewBag.Estudiantes = new SelectList(
+                    _context.Usuarios.Where(u => u.IdRol == 3),
+                    "IdUsuario",
+                    "Nombre",
+                    modelo.IdAsignadoA
+                );
+                ViewBag.Estados = new SelectList(ObtenerEstados(), "Value", "Text", modelo.Estado);
+
+                return View(modelo);
+            }
+
+            try
+            {
+                // Cargamos la tarea real de la BD
+                var tareaDb = await _context.Tareas.FirstOrDefaultAsync(t => t.IdTarea == id);
+
+                if (tareaDb == null)
+                    return NotFound();
+
+                //  
+                tareaDb.Titulo = modelo.Titulo;
+                tareaDb.Descripcion = modelo.Descripcion;
+                tareaDb.FechaLimite = modelo.FechaLimite;
+                tareaDb.Estado = modelo.Estado;
+                tareaDb.IdProyecto = modelo.IdProyecto;
+                tareaDb.IdAsignadoA = modelo.IdAsignadoA;
+
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(tarea);
+            catch (Exception ex)
+            {
+                
+                ModelState.AddModelError(string.Empty, $"Error al guardar la tarea: {ex.Message}");
+
+                ViewBag.Proyectos = new SelectList(_context.Proyectos, "IdProyecto", "Nombre", modelo.IdProyecto);
+                ViewBag.Estudiantes = new SelectList(
+                    _context.Usuarios.Where(u => u.IdRol == 3),
+                    "IdUsuario",
+                    "Nombre",
+                    modelo.IdAsignadoA
+                );
+                ViewBag.Estados = new SelectList(ObtenerEstados(), "Value", "Text", modelo.Estado);
+
+                return View(modelo);
+            }
         }
 
-        // GET: Tareas/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null) return NotFound();
 
-            var tarea = await _context.Tareas
-                .FirstOrDefaultAsync(t => t.IdTarea == id);
-
-            if (tarea == null) return NotFound();
-
-            return View(tarea);
-        }
-
-        // POST: Tareas/Delete/5
+        //  ELIMINAR POST 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -146,12 +217,8 @@ namespace Gestor_Proyectos_Academicos.Controllers
                 _context.Tareas.Remove(tarea);
                 await _context.SaveChangesAsync();
             }
-            return RedirectToAction(nameof(Index));
-        }
 
-        private bool TareaExists(int id)
-        {
-            return _context.Tareas.Any(e => e.IdTarea == id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

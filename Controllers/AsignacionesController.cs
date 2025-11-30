@@ -1,16 +1,12 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Gestor_Proyectos_Academicos.Models;
+﻿using Gestor_Proyectos_Academicos.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
-
-
 
 namespace Gestor_Proyectos_Academicos.Controllers
 {
-    [Authorize(Roles = "Profesor,Administrador")]
+    [Authorize(Roles = "Profesor")]
     public class AsignacionesController : Controller
     {
         private readonly GestorProyectosContext _context;
@@ -20,7 +16,7 @@ namespace Gestor_Proyectos_Academicos.Controllers
             _context = context;
         }
 
-        // GET: Asignaciones
+        // GET: Asignaciones/Index
         public async Task<IActionResult> Index()
         {
             var asignaciones = await _context.ProyectosEstudiantes
@@ -31,132 +27,50 @@ namespace Gestor_Proyectos_Academicos.Controllers
             return View(asignaciones);
         }
 
-        // GET: Asignaciones/Details?idProyecto=1&idEstudiante=2
-        public async Task<IActionResult> Details(int? idProyecto, int? idEstudiante)
-        {
-            if (idProyecto == null || idEstudiante == null)
-                return NotFound();
-
-            var asignacion = await _context.ProyectosEstudiantes
-                .Include(pe => pe.Proyecto)
-                .Include(pe => pe.Estudiante)
-                .FirstOrDefaultAsync(pe =>
-                    pe.IdProyecto == idProyecto &&
-                    pe.IdEstudiante == idEstudiante);
-
-            if (asignacion == null)
-                return NotFound();
-
-            return View(asignacion);
-        }
-
         // GET: Asignaciones/Create
         public IActionResult Create()
         {
-            ViewData["IdProyecto"] = new SelectList(_context.Proyectos, "IdProyecto", "Nombre");
-            ViewData["IdEstudiante"] = new SelectList(_context.Usuarios, "IdUsuario", "Nombre"); // luego podrías filtrar por rol "Estudiante"
+            CargarCombos();
             return View();
+        }
+
+        private void CargarCombos()
+        {
+            ViewBag.Proyectos = new SelectList(_context.Proyectos, "IdProyecto", "Nombre");
+
+            // solo estudiantes (IdRol = 3)
+            ViewBag.Estudiantes = new SelectList(
+                _context.Usuarios.Where(u => u.IdRol == 3),
+                "IdUsuario",
+                "Nombre"
+            );
         }
 
         // POST: Asignaciones/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ProyectosEstudiantes asignacion)
+        public async Task<IActionResult> Create(ProyectosEstudiantes modelo)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(asignacion);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                CargarCombos();
+                return View(modelo);
             }
 
-            ViewData["IdProyecto"] = new SelectList(_context.Proyectos, "IdProyecto", "Nombre", asignacion.IdProyecto);
-            ViewData["IdEstudiante"] = new SelectList(_context.Usuarios, "IdUsuario", "Nombre", asignacion.IdEstudiante);
-            return View(asignacion);
-        }
+            // evitar asignaciones duplicadas
+            var existe = await _context.ProyectosEstudiantes
+                .AnyAsync(pe => pe.IdProyecto == modelo.IdProyecto &&
+                                pe.IdEstudiante == modelo.IdEstudiante);
 
-        // GET: Asignaciones/Edit?idProyecto=1&idEstudiante=2
-        public async Task<IActionResult> Edit(int? idProyecto, int? idEstudiante)
-        {
-            if (idProyecto == null || idEstudiante == null)
-                return NotFound();
-
-            var asignacion = await _context.ProyectosEstudiantes
-                .FirstOrDefaultAsync(pe =>
-                    pe.IdProyecto == idProyecto &&
-                    pe.IdEstudiante == idEstudiante);
-
-            if (asignacion == null)
-                return NotFound();
-
-            ViewData["IdProyecto"] = new SelectList(_context.Proyectos, "IdProyecto", "Nombre", asignacion.IdProyecto);
-            ViewData["IdEstudiante"] = new SelectList(_context.Usuarios, "IdUsuario", "Nombre", asignacion.IdEstudiante);
-
-            return View(asignacion);
-        }
-
-        // POST: Asignaciones/Edit
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int idProyectoOriginal, int idEstudianteOriginal, ProyectosEstudiantes asignacion)
-        {
-            // Para simplificar: si cambian el proyecto o estudiante, eliminamos la vieja y creamos la nueva
-            if (ModelState.IsValid)
+            if (existe)
             {
-                var original = await _context.ProyectosEstudiantes
-                    .FirstOrDefaultAsync(pe =>
-                        pe.IdProyecto == idProyectoOriginal &&
-                        pe.IdEstudiante == idEstudianteOriginal);
-
-                if (original == null)
-                    return NotFound();
-
-                _context.ProyectosEstudiantes.Remove(original);
-                _context.ProyectosEstudiantes.Add(asignacion);
-
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ModelState.AddModelError(string.Empty, "⚠️ El estudiante ya está asignado a ese proyecto.");
+                CargarCombos();
+                return View(modelo);
             }
 
-            ViewData["IdProyecto"] = new SelectList(_context.Proyectos, "IdProyecto", "Nombre", asignacion.IdProyecto);
-            ViewData["IdEstudiante"] = new SelectList(_context.Usuarios, "IdUsuario", "Nombre", asignacion.IdEstudiante);
-            return View(asignacion);
-        }
-
-        // GET: Asignaciones/Delete
-        public async Task<IActionResult> Delete(int? idProyecto, int? idEstudiante)
-        {
-            if (idProyecto == null || idEstudiante == null)
-                return NotFound();
-
-            var asignacion = await _context.ProyectosEstudiantes
-                .Include(pe => pe.Proyecto)
-                .Include(pe => pe.Estudiante)
-                .FirstOrDefaultAsync(pe =>
-                    pe.IdProyecto == idProyecto &&
-                    pe.IdEstudiante == idEstudiante);
-
-            if (asignacion == null)
-                return NotFound();
-
-            return View(asignacion);
-        }
-
-        // POST: Asignaciones/Delete
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int idProyecto, int idEstudiante)
-        {
-            var asignacion = await _context.ProyectosEstudiantes
-                .FirstOrDefaultAsync(pe =>
-                    pe.IdProyecto == idProyecto &&
-                    pe.IdEstudiante == idEstudiante);
-
-            if (asignacion != null)
-            {
-                _context.ProyectosEstudiantes.Remove(asignacion);
-                await _context.SaveChangesAsync();
-            }
+            _context.ProyectosEstudiantes.Add(modelo);
+            await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
