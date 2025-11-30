@@ -17,14 +17,14 @@ namespace Gestor_Proyectos_Academicos.Controllers
             _context = context;
         }
 
-        // GET: Roles
+        //  Roles
         public async Task<IActionResult> Index()
         {
             var roles = await _context.Roles.ToListAsync();
             return View(roles);
         }
 
-        // GET: Roles/Details/5
+        //  Roles/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -37,13 +37,13 @@ namespace Gestor_Proyectos_Academicos.Controllers
             return View(rol);
         }
 
-        // GET: Roles/Create
+        //  Roles/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Roles/Create
+        //  Roles/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("NombreRol")] Rol rol)
@@ -57,7 +57,7 @@ namespace Gestor_Proyectos_Academicos.Controllers
             return View(rol);
         }
 
-        // GET: Roles/Edit/5
+        //  Roles/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -68,7 +68,7 @@ namespace Gestor_Proyectos_Academicos.Controllers
             return View(rol);
         }
 
-        // POST: Roles/Edit/5
+        // : Roles/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdRol,NombreRol")] Rol rol)
@@ -94,7 +94,7 @@ namespace Gestor_Proyectos_Academicos.Controllers
             return View(rol);
         }
 
-        // GET: Roles/Delete/5
+        // Roles/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -107,7 +107,7 @@ namespace Gestor_Proyectos_Academicos.Controllers
             return View(rol);
         }
 
-        // POST: Roles/Delete/5
+        //  Roles/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

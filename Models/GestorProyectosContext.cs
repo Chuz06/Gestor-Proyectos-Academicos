@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
 namespace Gestor_Proyectos_Academicos.Models
 {
@@ -10,16 +9,22 @@ namespace Gestor_Proyectos_Academicos.Models
         {
         }
 
-        // Tablas
+        // ========= Tablas =========
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Rol> Roles { get; set; }
         public DbSet<Proyecto> Proyectos { get; set; }
         public DbSet<Tarea> Tareas { get; set; }
         public DbSet<ProyectosEstudiantes> ProyectosEstudiantes { get; set; }
 
+        // ========= Vistas de reporte =========
+        public DbSet<ReporteProyectoView> ReporteProyectos { get; set; }
+        public DbSet<ReporteEstudianteView> ReporteEstudiantes { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // ---- USUARIOS / ROLES (como ya lo tenías) ----
+            base.OnModelCreating(modelBuilder);
+
+            // ---- USUARIOS / ROLES ----
             modelBuilder.Entity<Usuario>(entity =>
             {
                 entity.HasKey(u => u.IdUsuario);
@@ -32,22 +37,34 @@ namespace Gestor_Proyectos_Academicos.Models
                       .HasForeignKey(u => u.IdRol);
             });
 
-            // ---- PROYECTOS-ESTUDIANTES ----
+            // ---- PROYECTOS-ESTUDIANTES (tabla intermedia) ----
             modelBuilder.Entity<ProyectosEstudiantes>(entity =>
             {
+                // PK compuesta
                 entity.HasKey(pe => new { pe.IdProyecto, pe.IdEstudiante });
 
                 entity.HasOne(pe => pe.Proyecto)
-                      .WithMany()                      // si quieres, luego le agregamos colección en Proyecto
+                      .WithMany()              // opcionalmente: .WithMany(p => p.ProyectosEstudiantes)
                       .HasForeignKey(pe => pe.IdProyecto);
 
                 entity.HasOne(pe => pe.Estudiante)
-                      .WithMany()                      // luego se puede refinar (solo estudiantes)
+                      .WithMany()              // opcionalmente: .WithMany(u => u.ProyectosEstudiantes)
                       .HasForeignKey(pe => pe.IdEstudiante);
             });
 
-            base.OnModelCreating(modelBuilder);
-        }
+            // ---- VISTA: vw_ReporteProyectos ----
+            modelBuilder.Entity<ReporteProyectoView>(entity =>
+            {
+                entity.HasNoKey();
+                entity.ToView("vw_ReporteProyectos");
+            });
 
+            // ---- VISTA: vw_ReporteEstudiantes ----
+            modelBuilder.Entity<ReporteEstudianteView>(entity =>
+            {
+                entity.HasNoKey();
+                entity.ToView("vw_ReporteEstudiantes");
+            });
+        }
     }
 }

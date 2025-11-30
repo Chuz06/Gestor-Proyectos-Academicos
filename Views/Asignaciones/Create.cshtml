@@ -6,21 +6,35 @@
 
 <h2>Nueva asignación de estudiante a proyecto</h2>
 
+<div asp-validation-summary="All" class="text-danger"></div>
+
 <form asp-action="Create" method="post">
     <div class="form-group">
-        <label for="IdProyecto">Proyecto</label>
-        <select asp-for="IdProyecto" class="form-control"
-                asp-items="ViewBag.IdProyecto"></select>
+        <label asp-for="IdProyecto"></label>
+        <select asp-for="IdProyecto"
+                asp-items="ViewBag.Proyectos"
+                class="form-control">
+            <option value="">-- Seleccione un proyecto --</option>
+        </select>
+        <span asp-validation-for="IdProyecto" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label for="IdEstudiante">Estudiante</label>
-        <select asp-for="IdEstudiante" class="form-control"
-                asp-items="ViewBag.IdEstudiante"></select>
+        <label asp-for="IdEstudiante"></label>
+        <select asp-for="IdEstudiante"
+                asp-items="ViewBag.Estudiantes"
+                class="form-control">
+            <option value="">-- Seleccione un estudiante --</option>
+        </select>
+        <span asp-validation-for="IdEstudiante" class="text-danger"></span>
     </div>
-
-    <br />
 
     <button type="submit" class="btn btn-primary">Guardar</button>
     <a asp-action="Index" class="btn btn-secondary">Volver</a>
 </form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

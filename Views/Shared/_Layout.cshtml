@@ -40,11 +40,29 @@
                             <a class="nav-link text-dark" asp-controller="Roles" asp-action="Index">Roles</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Asignaciones" asp-action="Index">
+                            <a class="nav-link" asp-controller="Asignaciones" asp-action="Index">Asignaciones</a>
                                 Asignaciones
                             </a>
+                        <li><a class="dropdown-item" href="/Reportes/Proyectos">Reporte de Proyectos</a></li>
+                        <li><a class="dropdown-item" href="/Reportes/Estudiantes">Reporte de Estudiantes</a></li>
                         </li>
                     </ul>
+                    @if (User.IsInRole("Profesor"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Reportes" asp-action="Proyectos">Reporte Proyectos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Reportes" asp-action="Estudiantes">Reporte Estudiantes</a>
+                        </li>
+                    }
+                    @if (User.IsInRole("Estudiante"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Reportes" asp-action="MiResumen">Mi resumen</a>
+                        </li>
+                    }
+
 
                     <!-- Menú derecho: login / logout -->
                     <ul class="navbar-nav">

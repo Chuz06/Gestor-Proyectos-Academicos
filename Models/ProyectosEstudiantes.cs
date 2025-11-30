@@ -1,19 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace Gestor_Proyectos_Academicos.Models
 {
     public class ProyectosEstudiantes
     {
-        // Clave compuesta
+        [Required]
         public int IdProyecto { get; set; }
+
+        [Required]
         public int IdEstudiante { get; set; }
 
-        // 🔹 Navegaciones (LAS QUE FALTAN)
-        public Proyecto Proyecto { get; set; }
-        public Usuario Estudiante { get; set; }
+        // Propiedades de navegación: NO se validan en el POST
+        [ValidateNever]
+        public Proyecto? Proyecto { get; set; }
+
+        [ValidateNever]
+        public Usuario? Estudiante { get; set; }
     }
 }
-

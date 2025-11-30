@@ -17,7 +17,7 @@ namespace Gestor_Proyectos_Academicos.Controllers
             _context = context;
         }
 
-        // GET: Usuarios
+        //  Usuarios
         public async Task<IActionResult> Index()
         {
             var usuarios = await _context.Usuarios
@@ -27,7 +27,7 @@ namespace Gestor_Proyectos_Academicos.Controllers
             return View(usuarios);
         }
 
-        // GET: Usuarios/Details/5
+        // Usuarios/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -41,7 +41,7 @@ namespace Gestor_Proyectos_Academicos.Controllers
             return View(usuario);
         }
 
-        // GET: Usuarios/Create
+        //  Usuarios/Create
         public IActionResult Create()
         {
             ViewBag.Roles = new SelectList(_context.Roles, "IdRol", "NombreRol");
@@ -54,7 +54,7 @@ namespace Gestor_Proyectos_Academicos.Controllers
         {
             if (ModelState.IsValid)
             {
-                // 🔐 Hashear la contraseña antes de guardar
+                //hash de la contraseña
                 usuario.Contrasena = BCrypt.Net.BCrypt.HashPassword(usuario.Contrasena);
 
                 _context.Add(usuario);
@@ -62,8 +62,8 @@ namespace Gestor_Proyectos_Academicos.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Si algo falla, se retorna la vista con el modelo
-            return View(usuario);
+           
+            return View(usuario); 
         }
 
         // edit
@@ -78,14 +78,14 @@ namespace Gestor_Proyectos_Academicos.Controllers
             {
                 try
                 {
-                    // 👉 Si el campo Contrasena viene con algo, lo hasheamos
+                    //
                     if (!string.IsNullOrWhiteSpace(usuario.Contrasena))
                     {
                         usuario.Contrasena = BCrypt.Net.BCrypt.HashPassword(usuario.Contrasena);
                     }
                     else
                     {
-                        // Si viene vacío, mantenemos la contraseña actual
+                        
                         var usuarioOriginal = await _context.Usuarios
                             .AsNoTracking()
                             .FirstOrDefaultAsync(u => u.IdUsuario == id);
@@ -110,7 +110,7 @@ namespace Gestor_Proyectos_Academicos.Controllers
             return View(usuario);
         }
 
-        // GET: Usuarios/Delete/5
+        //Usuarios/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -124,7 +124,7 @@ namespace Gestor_Proyectos_Academicos.Controllers
             return View(usuario);
         }
 
-        // POST: Usuarios/Delete/5
+        //  Usuarios/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
