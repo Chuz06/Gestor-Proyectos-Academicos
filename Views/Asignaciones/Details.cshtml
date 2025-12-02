@@ -1,0 +1,28 @@
+﻿@model Gestor_Proyectos_Academicos.Models.ProyectosEstudiantes
+
+@{
+    ViewData["Title"] = "Detalles Asignación";
+}
+
+<h2>Detalles de la asignación</h2>
+
+<dl class="row">
+    <dt class="col-sm-2">Proyecto</dt>
+    <dd class="col-sm-10">
+        @Model.Proyecto?.Nombre (@Model.IdProyecto)
+    </dd>
+
+    <dt class="col-sm-2">Estudiante</dt>
+    <dd class="col-sm-10">
+        @Model.Estudiante?.Nombre (@Model.IdEstudiante)
+    </dd>
+</dl>
+
+<p>
+    <a asp-action="Edit"
+       asp-route-idProyecto="@Model.IdProyecto"
+       asp-route-idEstudiante="@Model.IdEstudiante"
+       class="btn btn-primary">Editar</a>
+
+    <a asp-action="Index" class="btn btn-secondary">Volver</a>
+</p>

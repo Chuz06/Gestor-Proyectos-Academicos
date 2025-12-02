@@ -1,0 +1,26 @@
+﻿@model Gestor_Proyectos_Academicos.Models.Rol
+
+@{
+    ViewData["Title"] = "Crear Rol";
+}
+
+<h2>Crear Rol</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="NombreRol" class="control-label"></label>
+        <input asp-for="NombreRol" class="form-control" />
+        <span asp-validation-for="NombreRol" class="text-danger"></span>
+    </div>
+
+    <br />
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Volver</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

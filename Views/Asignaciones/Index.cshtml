@@ -1,0 +1,29 @@
+﻿@model IEnumerable<Gestor_Proyectos_Academicos.Models.ProyectosEstudiantes>
+
+@{
+    ViewData["Title"] = "Asignaciones";
+}
+
+<h2>Asignaciones de estudiantes a proyectos</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Nueva asignación</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Proyecto</th>
+            <th>Estudiante</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Proyecto?.Nombre</td>
+                <td>@item.Estudiante?.Nombre</td>
+            </tr>
+        }
+    </tbody>
+</table>

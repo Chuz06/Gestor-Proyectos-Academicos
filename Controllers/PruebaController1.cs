@@ -2,13 +2,15 @@
 using Microsoft.Data.SqlClient;
 using System.Net.NetworkInformation;
 
+
+
 namespace Gestor_Proyectos_Academicos.Controllers
 {
     public class PruebaController : Controller
     {
         public IActionResult Conexion()
         {
-            string cadena = "Server=localhost; Database=GestorProyectos; TrustServerCertificate=true; Integrated Security=true; Encrypt=False; ";
+            string cadena = "Server=DESKTOP-48TH8CI; Database=GestorProyectos; TrustServerCertificate=true; Integrated Security=true; Encrypt=False; ";
 
             try
             {

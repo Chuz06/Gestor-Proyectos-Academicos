@@ -1,0 +1,25 @@
+﻿@model Gestor_Proyectos_Academicos.Models.Rol
+
+@{
+    ViewData["Title"] = "Eliminar Rol";
+}
+
+<h2>Eliminar Rol</h2>
+
+<h3>¿Estás seguro de que querés eliminar este rol?</h3>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">Id</dt>
+        <dd class="col-sm-10">@Model.IdRol</dd>
+
+        <dt class="col-sm-2">Nombre</dt>
+        <dd class="col-sm-10">@Model.NombreRol</dd>
+    </dl>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="IdRol" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-secondary">Volver</a>
+</form>

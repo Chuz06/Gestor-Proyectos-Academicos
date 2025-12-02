@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Gestor_Proyectos_Academicos.Models.Proyecto>
+
+@{
+    ViewData["Title"] = "Proyectos";
+}
+
+<h2>Proyectos</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Crear nuevo proyecto</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(m => m.First().IdProyecto)</th>
+            <th>@Html.DisplayNameFor(m => m.First().Nombre)</th>
+            <th>@Html.DisplayNameFor(m => m.First().Descripcion)</th>
+            <th>@Html.DisplayNameFor(m => m.First().FechaInicio)</th>
+            <th>@Html.DisplayNameFor(m => m.First().FechaFin)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.IdProyecto</td>
+                <td>@item.Nombre</td>
+                <td>@item.Descripcion</td>
+                <td>@item.FechaInicio.ToString("yyyy-MM-dd")</td>
+                <td>@item.FechaFin?.ToString("yyyy-MM-dd")</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.IdProyecto">Detalles</a> |
+                    <a asp-action="Edit" asp-route-id="@item.IdProyecto">Editar</a> |
+                    <a asp-action="Delete" asp-route-id="@item.IdProyecto">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
