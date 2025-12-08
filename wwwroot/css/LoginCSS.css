@@ -1,0 +1,23 @@
+﻿@keyframes AnimationLogin {
+    100% {
+        background-position: 15% 30%
+    }
+}
+
+.ContenedorLogin {
+    margin-top: 13%;
+    background-color: rgb(255, 255, 255, 0.4);
+    color: black;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+    backdrop-filter: blur(1px)
+}
+
+body {
+    background-color:burlywood;
+    /*background-image: url(../../Resources/FondoLogin.svg);*/
+/*    background-repeat: no-repeat;
+    background-size: cover;
+    animation: AnimationLogin 5s infinite alternate linear;*/
+}

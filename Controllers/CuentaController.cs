@@ -82,8 +82,19 @@ namespace Gestor_Proyectos_Academicos.Controllers
                 principal
             );
 
-            //  Redirigir al Home 
-            return RedirectToAction("Index", "Home");
+            // redirección según rol
+            if (usuario.Rol.NombreRol == "Profesor")
+                return RedirectToAction("ProfesorDashboard", "Dashboards");
+
+            if (usuario.Rol.NombreRol == "Estudiante")
+                return RedirectToAction("EstudianteDashboard", "Dashboards");
+
+            if (usuario.Rol.NombreRol == "Administrador")
+                return RedirectToAction("AdministradorDashboard", "Dashboards");
+
+            // Si no tiene un rol válido
+            return RedirectToAction("Login", "Cuenta");
+
         }
 
         //  LOGOUT 
@@ -107,7 +118,7 @@ namespace Gestor_Proyectos_Academicos.Controllers
             {
                 var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(rawData));
 
-                var builder = new StringBuilder();
+                var builder = new StringBuilder();  
                 foreach (var b in bytes)
                 {
                     //"X2" = HEX MAYÚSCULAS

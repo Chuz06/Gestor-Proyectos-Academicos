@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "Panel del Profesor";
+    ViewData["HideSidebar"] = true;
+}
+
+<link rel="stylesheet" href="~/css/DashboardCSS.css" />
+
+<h2 class="mb-4">Panel del Profesor</h2>
+<div class="dashboard-container">
+
+    <div class="card">
+        <div class="card-details">
+            <p class="text-title">Proyectos</p>
+            <p class="text-body">Gestione y administre los proyectos académicos.</p>
+        </div>
+        <a asp-controller="Proyectos" asp-action="Index" class="card-button">Entrar</a>
+    </div>
+
+    <div class="card">
+        <div class="card-details">
+            <p class="text-title">Tareas</p>
+            <p class="text-body">Cree, edite y supervise tareas asignadas.</p>
+        </div>
+        <a asp-controller="Tareas" asp-action="Index" class="card-button">Entrar</a>
+    </div>
+
+    <div class="card">
+        <div class="card-details">
+            <p class="text-title">Asignaciones</p>
+            <p class="text-body">Asigne estudiantes a sus proyectos.</p>
+        </div>
+        <a asp-controller="Asignaciones" asp-action="Index" class="card-button">Entrar</a>
+    </div>
+
+    <div class="card">
+        <div class="card-details">
+            <p class="text-title">Reportes</p>
+            <p class="text-body">Visualice reportes generales de proyectos.</p>
+        </div>
+        <a asp-controller="Reportes" asp-action="Proyectos" class="card-button">Entrar</a>
+    </div>
+
+</div>

@@ -1,0 +1,54 @@
+﻿@{
+    ViewData["Title"] = "Panel del Estudiante";
+    ViewData["HideSidebar"] = true;
+}
+
+<link rel="stylesheet" href="~/css/DashboardCSS.css" />
+
+<div class="estudiante-dashboard">
+    <h2 class="mb-4">Panel del Estudiante</h2>
+
+    <!-- FILA CENTRAL CON LAS 3 CARDS -->
+    <div class="estudiante-row d-flex justify-content-center gap-4 mt-4">
+
+        <!-- CARD: Mis Proyectos -->
+        <div class="card estudiante-card">
+            <div class="card-details">
+                <p class="text-title">Mis Proyectos</p>
+                <p class="text-body">
+                    Consulte y gestione sus proyectos asignados.
+                </p>
+            </div>
+            <a asp-controller="Proyectos"
+               asp-action="Index"
+               class="card-button">Entrar</a>
+        </div>
+
+        <!-- CARD: Mis Tareas -->
+        <div class="card estudiante-card">
+            <div class="card-details">
+                <p class="text-title">Mis Tareas</p>
+                <p class="text-body">
+                    Revise sus tareas pendientes y completadas.
+                </p>
+            </div>
+            <a asp-controller="Tareas"
+               asp-action="Index"
+               class="card-button">Entrar</a>
+        </div>
+
+        <!-- CARD: Mi Resumen -->
+        <div class="card estudiante-card">
+            <div class="card-details">
+                <p class="text-title">Mi Resumen</p>
+                <p class="text-body">
+                    Visualice su rendimiento y actividades generales.
+                </p>
+            </div>
+            <a asp-controller="Reportes"
+               asp-action="MiResumen"
+               class="card-button">Entrar</a>
+        </div>
+
+    </div>
+</div>
