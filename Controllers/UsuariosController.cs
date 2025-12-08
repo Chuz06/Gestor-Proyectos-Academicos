@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gestor_Proyectos_Academicos.Controllers
 {
-    [Authorize(Roles = "Administrador Profesor")]
+    [Authorize(Roles = "Administrador, Profesor")]
     public class UsuariosController : Controller
     {
         private readonly GestorProyectosContext _context;

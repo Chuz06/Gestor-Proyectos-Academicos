@@ -1,114 +1,114 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var rol = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ?? "";
+}
+
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Gestor de Proyectos Académicos</title>
+    <title>@ViewData["Title"] - Gestor Proyectos</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Gestor_Proyectos_Academicos.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/SidebarCSS.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/dashboardcards.css" asp-append-version="true" />
+
+    @RenderSection("Styles", required: false)
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    Gestor de Proyectos Académicos
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                        aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
 
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <!-- Menú izquierdo -->
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Proyectos" asp-action="Index">Proyectos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Tareas" asp-action="Index">Tareas</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Roles" asp-action="Index">Roles</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Asignaciones" asp-action="Index">Asignaciones</a>
-                                Asignaciones
-                            </a>
-                        <li><a class="dropdown-item" href="/Reportes/Proyectos">Reporte de Proyectos</a></li>
-                        <li><a class="dropdown-item" href="/Reportes/Estudiantes">Reporte de Estudiantes</a></li>
-                        </li>
-                    </ul>
-                    @if (User.IsInRole("Profesor"))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Reportes" asp-action="Proyectos">Reporte Proyectos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Reportes" asp-action="Estudiantes">Reporte Estudiantes</a>
-                        </li>
-                    }
-                    @if (User.IsInRole("Estudiante"))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Reportes" asp-action="MiResumen">Mi resumen</a>
-                        </li>
-                    }
+<body class="main-body">
 
+    <!-- NAVBAR SUPERIOR -->
+    <nav class="navbar navbar-light bg-white border-bottom box-shadow mb-0 px-3 d-flex justify-content-between align-items-center">
 
-                    <!-- Menú derecho: login / logout -->
-                    <ul class="navbar-nav">
-                        @if (User.Identity != null && User.Identity.IsAuthenticated)
-                        {
-                            <li class="nav-item">
-                                <span class="nav-link text-dark">
-                                    Hola, @User.Identity.Name
-                                </span>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Cuenta" asp-action="Logout">
-                                    Cerrar sesión
-                                </a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Cuenta" asp-action="Login">
-                                    Iniciar sesión
-                                </a>
-                            </li>
-                        }
-                    </ul>
+        <span class="navbar-brand fw-bold mx-auto text-center">
+            Gestor de Proyectos Académicos
+        </span>
+
+        <div class="navbar-right">
+            <button class="Btn" onclick="window.location='/Cuenta/Logout'">
+                <div class="sign">
+                    <svg viewBox="0 0 512 512">
+                        <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path>
+                    </svg>
                 </div>
-            </div>
-        </nav>
-    </header>
+                <div class="text">Cerrar sesión</div>
+            </button>
+        </div>
 
-    <div class="container">
-        <main role="main" class="pb-3">
+
+    </nav>
+
+
+    <div class="app-container">
+
+        @if (ViewData["HideSidebar"] == null)
+        {
+            <!-- SIDEBAR -->
+            <aside class="sidebar">
+
+                <!-- LOGO -->
+                <div class="logo">
+                    <span class="menu-title">Menú Principal</span>
+                </div>
+
+                <!-- MENU -->
+                <nav class="menu">
+                    <ul>
+                        @if (rol == "Profesor")
+                        {
+                            <li><a asp-controller="Dashboards" asp-action="ProfesorDashboard"><i class="fas fa-home"></i>Inicio</a></li>
+                            <li><a asp-controller="Proyectos" asp-action="Index"><i class="fas fa-folder"></i>Proyectos</a></li>
+                            <li><a asp-controller="Tareas" asp-action="Index"><i class="fas fa-list-check"></i>Tareas</a></li>
+                            <li><a asp-controller="Asignaciones" asp-action="Index"><i class="fas fa-user-plus"></i>Asignaciones</a></li>
+                            <li><a asp-controller="Reportes" asp-action="Proyectos"><i class="fas fa-chart-line"></i>Reportes</a></li>
+                        }
+
+                        @if (rol == "Estudiante")
+                        {
+                            <li><a asp-controller="Dashboards" asp-action="EstudianteDashboard"><i class="fas fa-home"></i>Inicio</a></li>
+                            <li><a asp-controller="Proyectos" asp-action="Index"><i class="fas fa-folder"></i>Mis Proyectos</a></li>
+                            <li><a asp-controller="Tareas" asp-action="Index"><i class="fas fa-list-check"></i>Mis Tareas</a></li>
+                            <li><a asp-controller="Reportes" asp-action="MiResumen"><i class="fas fa-chart-line"></i>Mi Resumen</a></li>
+                        }
+
+                        @if (rol == "Administrador")
+                        {
+                            <li><a asp-controller="Dashboards" asp-action="AdministradorDashboard"><i class="fas fa-home"></i>Inicio</a></li>
+                            <li><a asp-controller="Usuarios" asp-action="Index"><i class="fas fa-user"></i>Usuarios</a></li>
+                            <li><a asp-controller="Roles" asp-action="Index"><i class="fas fa-user-gear"></i>Roles</a></li>
+                            <li><a asp-controller="Proyectos" asp-action="Index"><i class="fas fa-folder"></i>Proyectos</a></li>
+                        }
+                    </ul>
+                </nav>
+
+                <div class="profile">
+
+                    <div class="avatar avatar-icon">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+
+                    <div class="user-info">
+                        <h3>@User.Identity?.Name</h3>
+                        <p>@rol</p>
+                    </div>
+
+                </div>
+
+
+            </aside>
+            }
+
+        <!-- CONTENIDO -->
+        <main class="content-area p-4">
             @RenderBody()
         </main>
+
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - Gestor de Proyectos Académicos -
-            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacidad</a>
-        </div>
-    </footer>
+    <script src="~/js/SidebarJS.js"></script>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    @RenderSection("Scripts", required: false)
+
 </body>
 </html>

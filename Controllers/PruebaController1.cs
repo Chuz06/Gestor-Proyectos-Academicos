@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Net.NetworkInformation;
 
@@ -6,6 +7,7 @@ using System.Net.NetworkInformation;
 
 namespace Gestor_Proyectos_Academicos.Controllers
 {
+    [Authorize(Roles = "Administrador")]
     public class PruebaController : Controller
     {
         public IActionResult Conexion()

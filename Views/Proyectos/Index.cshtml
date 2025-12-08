@@ -2,13 +2,21 @@
 
 @{
     ViewData["Title"] = "Proyectos";
+
+    var rol = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+    bool esProfesor = rol == "Profesor";
+    bool esAdmin = rol == "Administrador";
+    bool esEstudiante = rol == "Estudiante";
 }
 
 <h2>Proyectos</h2>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Crear nuevo proyecto</a>
-</p>
+@if (esProfesor || esAdmin)
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Crear nuevo proyecto</a>
+    </p>
+}
 
 <table class="table table-striped">
     <thead>
@@ -18,9 +26,15 @@
             <th>@Html.DisplayNameFor(m => m.First().Descripcion)</th>
             <th>@Html.DisplayNameFor(m => m.First().FechaInicio)</th>
             <th>@Html.DisplayNameFor(m => m.First().FechaFin)</th>
-            <th></th>
+
+            @* Solo mostrar la columna Acciones a profesor/admin *@
+            @if (esProfesor || esAdmin)
+            {
+                <th>Acciones</th>
+            }
         </tr>
     </thead>
+
     <tbody>
         @foreach (var item in Model)
         {
@@ -28,13 +42,17 @@
                 <td>@item.IdProyecto</td>
                 <td>@item.Nombre</td>
                 <td>@item.Descripcion</td>
-                <td>@item.FechaInicio.ToString("yyyy-MM-dd")</td>
-                <td>@item.FechaFin?.ToString("yyyy-MM-dd")</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.IdProyecto">Detalles</a> |
-                    <a asp-action="Edit" asp-route-id="@item.IdProyecto">Editar</a> |
-                    <a asp-action="Delete" asp-route-id="@item.IdProyecto">Eliminar</a>
-                </td>
+                <td>@item.FechaInicio.ToString("dd-MM-yyyy")</td>
+                <td>@item.FechaFin?.ToString("dd-MM-yyyy")</td>
+
+                @if (esProfesor || esAdmin)
+                {
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.IdProyecto">Detalles</a> |
+                        <a asp-action="Edit" asp-route-id="@item.IdProyecto">Editar</a> |
+                        <a asp-action="Delete" asp-route-id="@item.IdProyecto">Eliminar</a>
+                    </td>
+                }
             </tr>
         }
     </tbody>

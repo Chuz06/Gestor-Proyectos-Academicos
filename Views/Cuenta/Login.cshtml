@@ -1,36 +1,78 @@
 ﻿@{
-    ViewData["Title"] = "Iniciar sesión";
+    Layout = null;
 }
 
-<h2>Iniciar sesión</h2>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>Inicio de Sesión</title>
 
-@if (ViewBag.Error != null)
-{
-    <div class="alert alert-danger">
-        @ViewBag.Error
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/css/LoginCSS.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="offset-3 col-md-6 ContenedorLogin">
+
+                <h2 class="Titulo text-center">Inicio de sesión</h2>
+                <form asp-controller="Cuenta" asp-action="Login" method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label class="form-label">Correo:</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fa-solid fa-user"></i>
+                            </span>
+                            <input class="form-control"
+                                   type="email"
+                                   name="correo"
+                                   placeholder="Ingrese su correo"
+                                   required />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Contraseña:</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fa-solid fa-lock"></i>
+                            </span>
+                            <input class="form-control"
+                                   type="password"
+                                   name="contrasena"
+                                   placeholder="Ingrese su contraseña"
+                                   required />
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary col-md-12">
+                        Iniciar sesión
+                    </button>
+
+                </form>
+                @if (ViewBag.Error != null)
+                {
+                    <script>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: '@ViewBag.Error'
+                        });
+                    </script>
+                }
+
+            </div>
+        </div>
     </div>
-}
 
-<form asp-action="Login" method="post">
-    @Html.AntiForgeryToken()
-
-    <div class="mb-3">
-        <label for="correo" class="form-label">Correo</label>
-        <input type="email"
-               class="form-control"
-               id="correo"
-               name="correo"
-               required />
-    </div>
-
-    <div class="mb-3">
-        <label for="contrasena" class="form-label">Contraseña</label>
-        <input type="password"
-               class="form-control"
-               id="contrasena"
-               name="contrasena"
-               required />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Entrar</button>
-</form>
+</body>
+</html>

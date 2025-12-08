@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Panel del Administrador";
+    ViewData["HideSidebar"] = true;
+}
+
+<link rel="stylesheet" href="~/css/DashboardCSS.css" />
+
+<div class="admin-dashboard">
+
+    <h2 class="mb-4 text-center">Panel del Administrador</h2>
+
+    <div class="admin-row d-flex justify-content-center gap-4">
+
+        <!-- CARD: Usuarios -->
+        <div class="card admin-card">
+            <div class="card-details">
+                <p class="text-title">Usuarios</p>
+                <p class="text-body">Gestione todos los usuarios del sistema.</p>
+            </div>
+            <a asp-controller="Usuarios" asp-action="Index" class="card-button">Entrar</a>
+        </div>
+
+        <!-- CARD: Proyectos -->
+        <div class="card admin-card">
+            <div class="card-details">
+                <p class="text-title">Proyectos</p>
+                <p class="text-body">Consulte y administre todos los proyectos.</p>
+            </div>
+            <a asp-controller="Proyectos" asp-action="Index" class="card-button">Entrar</a>
+        </div>
+
+        <!-- CARD: Roles -->
+        <div class="card admin-card">
+            <div class="card-details">
+                <p class="text-title">Roles</p>
+                <p class="text-body">Configure los roles y permisos del sistema.</p>
+            </div>
+            <a asp-controller="Roles" asp-action="Index" class="card-button">Entrar</a>
+        </div>
+
+        <!-- CARD: Reportes -->
+        <div class="card admin-card">
+            <div class="card-details">
+                <p class="text-title">Reportes</p>
+                <p class="text-body">Visualice reportes generales del sistema.</p>
+            </div>
+            <a asp-controller="Reportes" asp-action="Index" class="card-button">Entrar</a>
+        </div>
+
+    </div>
+
+</div>

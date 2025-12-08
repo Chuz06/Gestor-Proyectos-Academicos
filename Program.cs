@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 🔹 Conexión a BD (ya lo tenías)
+// Conexión a BD 
 builder.Services.AddDbContext<GestorProyectosContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -33,12 +33,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// 🔹 IMPORTANTE: primero autenticación, luego autorización
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Cuenta}/{action=Login}/{id?}");
 
 app.Run();
