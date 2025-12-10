@@ -4,12 +4,24 @@
     ViewData["Title"] = "Eliminar proyecto";
 }
 
-<h2>Eliminar proyecto</h2>
+<link rel="stylesheet" href="~/css/ProyectosCRUD.css" />
 
-<p>¿Está seguro que desea eliminar el proyecto <strong>@Model.Nombre</strong>?</p>
+<h2 class="section-title">Eliminar proyecto</h2>
 
-<form asp-action="Delete" method="post">
-    <input type="hidden" asp-for="IdProyecto" />
-    <button type="submit" class="btn btn-danger">Eliminar</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-</form>
+<div class="delete-card">
+
+    <p>¿Está seguro que desea eliminar el proyecto?</p>
+
+    <h3 style="margin-top: 5px; font-weight: bold;">
+        "@Model.Nombre"
+    </h3>
+
+    <form asp-action="Delete" method="post" style="margin-top: 20px;">
+        <input type="hidden" asp-for="IdProyecto" />
+
+        <button type="submit" class="btn-delete-big">Eliminar definitivamente</button>
+        <br />
+        <a asp-action="Index" class="btn-cancel">Cancelar</a>
+    </form>
+
+</div>

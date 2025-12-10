@@ -4,23 +4,19 @@
     ViewData["Title"] = "Crear Rol";
 }
 
-<h2>Crear Rol</h2>
+<link rel="stylesheet" href="~/css/RolesCRUD.css" />
 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="NombreRol" class="control-label"></label>
-        <input asp-for="NombreRol" class="form-control" />
-        <span asp-validation-for="NombreRol" class="text-danger"></span>
-    </div>
+<div class="form-card">
+    <h2 class="form-title">Crear Nuevo Rol</h2>
 
-    <br />
+    <form asp-action="Create" method="post">
+        <div class="form-group">
+            <label asp-for="NombreRol"></label>
+            <input asp-for="NombreRol" class="form-input" />
+            <span asp-validation-for="NombreRol" class="text-danger"></span>
+        </div>
 
-    <button type="submit" class="btn btn-primary">Guardar</button>
-    <a asp-action="Index" class="btn btn-secondary">Volver</a>
-</form>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
+        <button type="submit" class="btn-guardar">Guardar</button>
+        <a asp-action="Index" class="btn-cancel">Volver</a>
+    </form>
+</div>

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Gestor_Proyectos_Academicos.Models
@@ -17,11 +18,10 @@ namespace Gestor_Proyectos_Academicos.Models
         [Required]
         public string Contrasena { get; set; }
 
-        // ⚠️ ESTA es la FK REAL en tu BD
         [ForeignKey("Rol")]
         public int IdRol { get; set; }
 
-        // Navegación
+        [ValidateNever]
         public Rol Rol { get; set; }
     }
 }

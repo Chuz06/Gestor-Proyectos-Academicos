@@ -1,26 +1,24 @@
 ﻿@model Gestor_Proyectos_Academicos.Models.Usuario
 
-@{
-    ViewData["Title"] = "Eliminar usuario";
-}
+<link rel="stylesheet" href="~/css/UsuariosCRUD.css" />
 
-<h2>Eliminar usuario</h2>
+<div class="delete-card">
+    <h2 class="form-title">Eliminar Usuario</h2>
 
-<p>¿Está seguro que desea eliminar el usuario <strong>@Model.Nombre</strong>?</p>
+    <p>¿Está seguro que desea eliminar al usuario <strong>@Model.Nombre</strong>?</p>
 
-<dl class="row">
-    <dt class="col-sm-2">Nombre</dt>
-    <dd class="col-sm-10">@Model.Nombre</dd>
+    <dl>
+        <dt>Correo</dt>
+        <dd>@Model.Correo</dd>
 
-    <dt class="col-sm-2">Correo</dt>
-    <dd class="col-sm-10">@Model.Correo</dd>
+        <dt>Rol</dt>
+        <dd>@Model.Rol?.NombreRol</dd>
+    </dl>
 
-    <dt class="col-sm-2">Rol</dt>
-    <dd class="col-sm-10">@Model.Rol?.NombreRol</dd>
-</dl>
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="IdUsuario" />
 
-<form asp-action="Delete" method="post">
-    <input type="hidden" asp-for="IdUsuario" />
-    <button type="submit" class="btn btn-danger">Eliminar</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-</form>
+        <button type="submit" class="btn-delete-big">Eliminar</button>
+        <a asp-action="Index" class="btn-cancel">Cancelar</a>
+    </form>
+</div>

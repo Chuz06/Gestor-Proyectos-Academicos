@@ -2,44 +2,74 @@
 
 @{
     ViewData["Title"] = "Tareas";
+
+    bool esProfesor = User.IsInRole("Profesor") || User.IsInRole("Administrador");
+    bool esEstudiante = User.IsInRole("Estudiante");
 }
 
-<h2>Tareas</h2>
+<link rel="stylesheet" href="~/css/TareasCRUD.css" />
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Crear nueva tarea</a>
-</p>
+<div class="section-header">
+    <h2 class="section-title">Tareas</h2>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Título</th>
-            <th>Descripción</th>
-            <th>Fecha límite</th>
-            <th>Estado</th>
-            <th>Id Proyecto</th>
-            <th>Id Asignado A</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+    <a asp-action="Create" class="btn-create">
+       + Crear nueva tarea
+    </a>
+</div>
+
+<div class="card-table-container">
+    <table class="modern-table">
+        <thead>
             <tr>
-                <td>@item.IdTarea</td>
-                <td>@item.Titulo</td>
-                <td>@item.Descripcion</td>
-                <td>@item.FechaLimite.ToString("yyyy-MM-dd")</td>
-                <td>@item.Estado</td>
-                <td>@item.IdProyecto</td>
-                <td>@item.IdAsignadoA</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.IdTarea">Detalles</a> |
-                    <a asp-action="Edit" asp-route-id="@item.IdTarea">Editar</a> |
-                    <a asp-action="Delete" asp-route-id="@item.IdTarea">Eliminar</a>
-                </td>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Fecha límite</th>
+                <th>Estado</th>
+                <th>Proyecto</th>
+
+                @if (esProfesor)
+                {
+                    <th>Asignado a</th>
+                }
+
+                <th>Acciones</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Titulo</td>
+                    <td>@item.Descripcion</td>
+                    <td>@item.FechaLimite.ToString("dd-MM-yyyy")</td>
+                    <td>@item.Estado</td>
+                    <td>@item.Proyecto?.Nombre</td>
+
+                    @if (esProfesor)
+                    {
+                        <td>@item.AsignadoA?.Nombre</td>
+                    }
+
+                    <td class="actions-cell">
+
+                        <a asp-action="Details"
+                           asp-route-id="@item.IdTarea"
+                           class="action-btn info">Detalles</a>
+
+                        <a asp-action="Edit"
+                           asp-route-id="@item.IdTarea"
+                           class="action-btn edit">Editar</a>
+
+                        <a asp-action="Delete"
+                           asp-route-id="@item.IdTarea"
+                           class="action-btn delete">Eliminar</a>
+
+
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -8,52 +8,50 @@
     bool esAdmin = rol == "Administrador";
     bool esEstudiante = rol == "Estudiante";
 }
+<link rel="stylesheet" href="~/css/ProyectosCRUD.css" />
 
-<h2>Proyectos</h2>
+<div class="section-header">
+    <h2 class="section-title">Proyectos</h2>
 
-@if (esProfesor || esAdmin)
-{
-    <p>
-        <a asp-action="Create" class="btn btn-primary">Crear nuevo proyecto</a>
-    </p>
-}
+    @if (User.IsInRole("Profesor") || User.IsInRole("Administrador"))
+    {
+        <a asp-action="Create" class="btn-create">
+            + Crear nuevo proyecto
+        </a>
+    }
+</div>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(m => m.First().IdProyecto)</th>
-            <th>@Html.DisplayNameFor(m => m.First().Nombre)</th>
-            <th>@Html.DisplayNameFor(m => m.First().Descripcion)</th>
-            <th>@Html.DisplayNameFor(m => m.First().FechaInicio)</th>
-            <th>@Html.DisplayNameFor(m => m.First().FechaFin)</th>
-
-            @* Solo mostrar la columna Acciones a profesor/admin *@
-            @if (esProfesor || esAdmin)
-            {
+<div class="card-table-container">
+    <table class="modern-table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Inicio</th>
+                <th>Fin</th>
                 <th>Acciones</th>
-            }
-        </tr>
-    </thead>
-
-    <tbody>
-        @foreach (var item in Model)
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var p in Model)
         {
             <tr>
-                <td>@item.IdProyecto</td>
-                <td>@item.Nombre</td>
-                <td>@item.Descripcion</td>
-                <td>@item.FechaInicio.ToString("dd-MM-yyyy")</td>
-                <td>@item.FechaFin?.ToString("dd-MM-yyyy")</td>
+                <td>@p.Nombre</td>
+                <td>@p.Descripcion</td>
+                <td>@p.FechaInicio.ToString("dd-MM-yyyy")</td>
+                <td>@p.FechaFin.ToString("dd-MM-yyyy")</td>
 
-                @if (esProfesor || esAdmin)
-                {
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.IdProyecto">Detalles</a> |
-                        <a asp-action="Edit" asp-route-id="@item.IdProyecto">Editar</a> |
-                        <a asp-action="Delete" asp-route-id="@item.IdProyecto">Eliminar</a>
-                    </td>
-                }
+                <td class="actions-cell">
+                    <a asp-action="Details" asp-route-id="@p.IdProyecto" class="action-btn info">Detalles</a>
+
+                    @if (User.IsInRole("Profesor") || User.IsInRole("Administrador"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@p.IdProyecto" class="action-btn edit">Editar</a>
+                        <a asp-action="Delete" asp-route-id="@p.IdProyecto" class="action-btn delete">Eliminar</a>
+                    }
+                </td>
             </tr>
         }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>

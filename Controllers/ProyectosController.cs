@@ -1,12 +1,13 @@
 ﻿using Gestor_Proyectos_Academicos.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace Gestor_Proyectos_Academicos.Controllers
 {
-    [Authorize] // solo requiere login
+    [Authorize]
     public class ProyectosController : Controller
     {
         private readonly GestorProyectosContext _context;
@@ -16,6 +17,7 @@ namespace Gestor_Proyectos_Academicos.Controllers
             _context = context;
         }
 
+        // INDEX 
         [Authorize(Roles = "Profesor,Estudiante,Administrador")]
         public async Task<IActionResult> Index()
         {
@@ -30,70 +32,119 @@ namespace Gestor_Proyectos_Academicos.Controllers
 
             List<Proyecto> proyectos;
 
-            // ADMINISTRADOR → ve todos
             if (rol == "Administrador")
             {
                 proyectos = await _context.Proyectos.ToListAsync();
             }
-
-            // PROFESOR → ve los que él creó
             else if (rol == "Profesor")
             {
                 proyectos = await _context.Proyectos
                     .Where(p => p.IdProfesor == usuario.IdUsuario)
                     .ToListAsync();
             }
-
-            // ESTUDIANTE → ve solo los proyectos donde está asignado
             else
             {
-                proyectos = await _context.ProyectosEstudiantes.Where(pe => pe.IdEstudiante == usuario.IdUsuario).Select(pe => pe.Proyecto).Distinct().ToListAsync();
+                proyectos = await _context.ProyectosEstudiantes
+                    .Where(pe => pe.IdEstudiante == usuario.IdUsuario)
+                    .Select(pe => pe.Proyecto)
+                    .Distinct()
+                    .ToListAsync();
             }
 
             return View(proyectos);
         }
 
-        // detalles
-        public async Task<IActionResult> Details(int? id)
+        // DETAILS 
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null) return NotFound();
-
             var proyecto = await _context.Proyectos
                 .FirstOrDefaultAsync(p => p.IdProyecto == id);
 
-            if (proyecto == null) return NotFound();
+            if (proyecto == null)
+                return NotFound();
+
+            ViewBag.NombreProfesor = await _context.Usuarios
+                .Where(u => u.IdUsuario == proyecto.IdProfesor)
+                .Select(u => u.Nombre)
+                .FirstOrDefaultAsync();
 
             return View(proyecto);
         }
 
-        // create, solo admin y profe
+        // CREATE GET 
         [Authorize(Roles = "Profesor,Administrador")]
         public IActionResult Create()
         {
+            var rol = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (rol == "Administrador")
+            {
+                ViewBag.Profesores = new SelectList(
+                    _context.Usuarios.Where(u => u.IdRol == 2), 
+                    "IdUsuario",
+                    "Nombre"
+                );
+            }
+            else
+            {
+                ViewBag.Profesores = null;
+            }
+
             return View();
         }
 
+
+        // CREATE POST
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Profesor,Administrador")]
         public async Task<IActionResult> Create(Proyecto proyecto)
         {
+            var rol = User.FindFirst(ClaimTypes.Role)?.Value;
             var correo = User.FindFirst(ClaimTypes.Email)?.Value;
-            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Correo == correo);
 
-            proyecto.IdProfesor = usuario.IdUsuario;
+            var usuario = await _context.Usuarios
+                .FirstOrDefaultAsync(u => u.Correo == correo);
 
-            if (ModelState.IsValid)
+            if (usuario == null)
+                return Unauthorized();
+
+            if (rol == "Profesor")
             {
-                _context.Add(proyecto);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                proyecto.IdProfesor = usuario.IdUsuario;
+
+                ModelState.Remove("IdProfesor");
+                ModelState.Remove("Profesor");
             }
 
-            return View(proyecto);
+            if (rol == "Administrador")
+            {
+                if (proyecto.IdProfesor <= 0)
+                    ModelState.AddModelError("IdProfesor", "Debe seleccionar un profesor.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                if (rol == "Administrador")
+                {
+                    ViewBag.Profesores = new SelectList(
+                        _context.Usuarios.Where(u => u.IdRol == 2),
+                        "IdUsuario",
+                        "Nombre",
+                        proyecto.IdProfesor   
+                    );
+                }
+
+                return View(proyecto);
+            }
+
+            _context.Add(proyecto);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
-        // edit
+
+        // EDIT GET
         [Authorize(Roles = "Profesor,Administrador")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -109,9 +160,20 @@ namespace Gestor_Proyectos_Academicos.Controllers
             if (rol == "Profesor" && proyecto.IdProfesor != usuario.IdUsuario)
                 return Forbid();
 
+            if (rol == "Administrador")
+            {
+                ViewBag.Profesores = new SelectList(
+                    _context.Usuarios.Where(u => u.IdRol == 2), // 2 = Profesor
+                    "IdUsuario",
+                    "Nombre",
+                    proyecto.IdProfesor
+                );
+            }
+
             return View(proyecto);
         }
 
+        // EDIT POST
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Profesor,Administrador")]
@@ -123,8 +185,10 @@ namespace Gestor_Proyectos_Academicos.Controllers
             var correo = User.FindFirst(ClaimTypes.Email)?.Value;
             var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Correo == correo);
 
-            if (rol == "Profesor" && proyecto.IdProfesor != usuario.IdUsuario)
-                return Forbid();
+            if (rol == "Profesor")
+            {
+                proyecto.IdProfesor = usuario.IdUsuario;
+            }
 
             if (ModelState.IsValid)
             {
@@ -133,10 +197,20 @@ namespace Gestor_Proyectos_Academicos.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            if (rol == "Administrador")
+            {
+                ViewBag.Profesores = new SelectList(
+                    _context.Usuarios.Where(u => u.IdRol == 2),
+                    "IdUsuario",
+                    "Nombre",
+                    proyecto.IdProfesor
+                );
+            }
+
             return View(proyecto);
         }
-        
-        // delete
+
+        // DELETE 
         [Authorize(Roles = "Profesor,Administrador")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -161,9 +235,11 @@ namespace Gestor_Proyectos_Academicos.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var proyecto = await _context.Proyectos.FindAsync(id);
-
-            _context.Proyectos.Remove(proyecto!);
-            await _context.SaveChangesAsync();
+            if (proyecto != null)
+            {
+                _context.Proyectos.Remove(proyecto);
+                await _context.SaveChangesAsync();
+            }
 
             return RedirectToAction(nameof(Index));
         }

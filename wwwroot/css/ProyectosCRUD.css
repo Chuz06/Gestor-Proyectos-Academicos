@@ -1,0 +1,196 @@
+﻿ 
+/* SECCIÓN DE TÍTULO Y BOTÓN CREAR */
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 25px 10px;
+}
+
+.section-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: white;
+}
+
+.btn-create {
+    background: #007bff;
+    padding: 10px 18px;
+    color: white;
+    font-weight: 600;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+    .btn-create:hover {
+        background: #0056d4;
+        color: white;
+    }
+/* Index */
+.card-table-container {
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(6px);
+    padding: 20px;
+    border-radius: 12px;
+    margin: 15px;
+}
+
+.modern-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: white;
+}
+
+    .modern-table th {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 2px solid rgba(255,255,255,0.25);
+        font-size: 16px;
+    }
+
+    .modern-table td {
+        padding: 10px 12px;
+        border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .modern-table tr:hover {
+        background: rgba(255,255,255,0.08);
+    }
+
+/* ACCIONES EN LA TABLA */
+
+.actions-cell {
+    display: flex;
+    gap: 8px;
+}
+
+.action-btn {
+    padding: 6px 10px;
+    font-size: 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: white;
+}
+
+    .action-btn.info {
+        background: #17a2b8;
+        
+    }
+    .action-btn.info:hover {
+        background: #0d6776;
+    }
+
+    .action-btn.edit {
+        background: #ffc107;
+        color: #000;
+    }
+    .action-btn.edit:hover {
+        background: #b08505;
+        color: #000;
+    }
+
+    .action-btn.delete {
+        background: #dc3545;
+        color: white;
+    }
+    .action-btn.delete:hover {
+        background: #9d2733;
+        color: white;
+    }
+    .action-btn:hover {
+        opacity: 0.85;
+        color: white;
+    }
+
+/* Create / Edit */
+
+.form-card {
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(8px);
+    padding: 25px;
+    border-radius: 12px;
+    width: 60%;
+    margin: auto;
+    color: white;
+}
+
+.form-title {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    margin-top: 5px;
+}
+
+.btn-guardar {
+    background: #28a745;
+    padding: 10px 16px;
+    border-radius: 8px;
+    color: white;
+    border: none;
+    font-weight: 600;
+}
+.btn-guardar:hover {
+    background: #1c622c;
+    padding: 10px 16px;
+    border-radius: 8px;
+    color: white;
+    border: none;
+    font-weight: 600;
+}
+
+.btn-cancel {
+    margin-left: 10px;
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* DELETE  */
+
+.delete-card {
+    background: rgba(255,0,0,0.15);
+    padding: 25px;
+    border-radius: 12px;
+    color: white;
+    width: 50%;
+    margin: auto;
+    text-align: center;
+}
+
+.btn-delete-big {
+    background: #dc3545;
+    padding: 12px 20px;
+    border-radius: 10px;
+    color: white;
+    border: none;
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* DETAILS */
+.details-card {
+    background: rgba(255,255,255,0.12);
+    padding: 25px;
+    border-radius: 12px;
+    width: 50%;
+    margin: auto;
+    color: white;
+}

@@ -16,7 +16,52 @@ namespace Gestor_Proyectos_Academicos.Controllers
             _context = context;
         }
 
-        //  REPORTE GENERAL DE PROYECTOS (PROFESOR) 
+        // REPORTERÍA DEL ADMINISTRADOR 
+
+        [Authorize(Roles = "Administrador")]
+        public async Task<IActionResult> ReportesAdmin()
+        {
+            // --- USUARIOS ---
+            var totalUsuarios = await _context.Usuarios.CountAsync();
+            var totalAdmins = await _context.Usuarios.CountAsync(u => u.IdRol == 1);
+            var totalProfes = await _context.Usuarios.CountAsync(u => u.IdRol == 2);
+            var totalEstudiantes = await _context.Usuarios.CountAsync(u => u.IdRol == 3);
+
+            // --- PROYECTOS ---
+            var totalProyectos = await _context.Proyectos.CountAsync();
+
+            var activos = await _context.Proyectos
+                .CountAsync(p => p.FechaFin >= DateTime.Today);
+
+            var finalizados = await _context.Proyectos
+                .CountAsync(p => p.FechaFin < DateTime.Today);
+
+            // --- TAREAS ---
+            var totalTareas = await _context.Tareas.CountAsync();
+            var pendientes = await _context.Tareas.CountAsync(t => t.Estado == "Pendiente");
+            var progreso = await _context.Tareas.CountAsync(t => t.Estado == "En Progreso");
+            var completadas = await _context.Tareas.CountAsync(t => t.Estado == "Completada");
+
+            ViewBag.TotalUsuarios = totalUsuarios;
+            ViewBag.Admins = totalAdmins;
+            ViewBag.Profesores = totalProfes;
+            ViewBag.Estudiantes = totalEstudiantes;
+
+            ViewBag.TotalProyectos = totalProyectos;
+            ViewBag.Activos = activos;
+            ViewBag.Finalizados = finalizados;
+
+            ViewBag.TotalTareas = totalTareas;
+            ViewBag.Pendientes = pendientes;
+            ViewBag.Progreso = progreso;
+            ViewBag.Completadas = completadas;
+
+            return View();
+        }
+
+        // REPORTES PARA PROFESOR 
+
+        // REPORTE GENERAL DE PROYECTOS (PROFESOR)
         [Authorize(Roles = "Profesor")]
         public async Task<IActionResult> Proyectos()
         {
@@ -24,7 +69,7 @@ namespace Gestor_Proyectos_Academicos.Controllers
             return View(datos);
         }
 
-        //  REPORTE POR ESTUDIANTES (PROFESOR) 
+        // REPORTE POR ESTUDIANTES (PROFESOR)
         [Authorize(Roles = "Profesor")]
         public async Task<IActionResult> Estudiantes()
         {
@@ -32,25 +77,22 @@ namespace Gestor_Proyectos_Academicos.Controllers
             return View(datos);
         }
 
-        // REPORTE PERSONAL (ESTUDIANTE) 
+
+        // REPORTE PERSONAL (ESTUDIANTE)
+
         [Authorize(Roles = "Estudiante")]
         public async Task<IActionResult> MiResumen()
         {
-            // usa el correo del usuario logueado
             var correo = User.FindFirstValue(ClaimTypes.Email);
 
             if (string.IsNullOrEmpty(correo))
-            {
                 return RedirectToAction("Login", "Cuenta");
-            }
 
             var estudiante = await _context.Usuarios
                 .FirstOrDefaultAsync(u => u.Correo == correo);
 
             if (estudiante == null)
-            {
                 return RedirectToAction("Login", "Cuenta");
-            }
 
             var datos = await _context.ReporteEstudiantes
                 .Where(r => r.IdEstudiante == estudiante.IdUsuario)
@@ -58,5 +100,6 @@ namespace Gestor_Proyectos_Academicos.Controllers
 
             return View(datos);
         }
+
     }
 }

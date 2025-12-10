@@ -4,26 +4,56 @@
     ViewData["Title"] = "Asignaciones";
 }
 
-<h2>Asignaciones de estudiantes a proyectos</h2>
+<link rel="stylesheet" href="~/css/AsignacionesCRUD.css" />
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Nueva asignación</a>
-</p>
+<div class="section-header">
+    <h2 class="section-title">Asignaciones</h2>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Proyecto</th>
-            <th>Estudiante</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+    <a asp-action="Create" class="btn-create">Nueva asignación</a>
+</div>
+
+<div class="card-table-container">
+    <table class="modern-table">
+        <thead>
             <tr>
-                <td>@item.Proyecto?.Nombre</td>
-                <td>@item.Estudiante?.Nombre</td>
+                <th>Proyecto</th>
+                <th>Estudiante</th>
+                <th>Acciones</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Proyecto?.Nombre</td>
+                    <td>@item.Estudiante?.Nombre</td>
+                    <td class="actions-cell">
+
+                        <a asp-action="Edit"
+                           asp-route-idProyecto="@item.IdProyecto"
+                           asp-route-idEstudiante="@item.IdEstudiante"
+                           class="action-btn edit">
+                            Editar
+                        </a>
+
+                        <a asp-action="Details"
+                           asp-route-idProyecto="@item.IdProyecto"
+                           asp-route-idEstudiante="@item.IdEstudiante"
+                           class="action-btn info">
+                            Detalles
+                        </a>
+
+                        <a asp-action="Delete"
+                           asp-route-idProyecto="@item.IdProyecto"
+                           asp-route-idEstudiante="@item.IdEstudiante"
+                           class="action-btn delete">
+                            Eliminar
+                        </a>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

@@ -1,0 +1,183 @@
+﻿    /* HEADER */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 25px 10px;
+}
+
+.section-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: white;
+}
+
+.btn-create {
+    background: #007bff;
+    padding: 10px 18px;
+    color: white;
+    font-weight: 600;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+    .btn-create:hover {
+        background: #0056d4;
+        color: white;
+    }
+
+/* TABLA */
+.card-table-container {
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(6px);
+    padding: 20px;
+    border-radius: 12px;
+    margin: 15px;
+    color: white;
+}
+
+.modern-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .modern-table th {
+        padding: 12px;
+        border-bottom: 2px solid rgba(255,255,255,0.25);
+    }
+
+    .modern-table td {
+        padding: 10px 12px;
+        border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .modern-table tr:hover {
+        background: rgba(255,255,255,0.08);
+    }
+
+.actions-cell {
+    display: flex;
+    gap: 8px;
+}
+
+.action-btn {
+    padding: 6px 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    color: white;
+}
+
+    .action-btn.info {
+        background: #17a2b8;
+    }
+
+        .action-btn.info:hover {
+            background: #0d6776;
+            color: white;
+        }
+
+    .action-btn.edit {
+        background: #ffc107;
+        color: black;
+    }
+
+        .action-btn.edit:hover {
+            background: #b08505;
+            color: white;
+        }
+
+    .action-btn.delete {
+        background: #dc3545;
+    }
+
+        .action-btn.delete:hover {
+            background: #9d2733;
+            color: white;
+        }
+
+/* FORMULARIOS */
+.form-card {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(8px);
+    padding: 25px;
+    border-radius: 12px;
+    width: 55%;
+    margin: auto;
+    color: white;
+}
+
+.form-title {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    margin-top: 5px;
+}
+
+.btn-guardar {
+    background: #28a745;
+    padding: 10px 16px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    border: none;
+    margin-top: 20px;
+}
+
+    .btn-guardar:hover {
+        background: #1c622c;
+        color: white;
+    }
+
+.btn-cancel {
+    margin-left: 10px;
+    color: #eee;
+    text-decoration: underline;
+}
+
+/* DETAILS */
+.details-card {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(8px);
+    padding: 25px;
+    border-radius: 12px;
+    width: 45%;
+    margin: auto;
+    color: white;
+}
+
+    .details-card dl dt {
+        font-weight: bold;
+    }
+
+/* DELETE */
+.delete-card {
+    background: rgba(255,0,0,0.2);
+    padding: 25px;
+    border-radius: 12px;
+    width: 45%;
+    margin: auto;
+    text-align: center;
+    color: white;
+}
+
+.btn-delete-big {
+    background: #dc3545;
+    padding: 12px 20px;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+    .btn-delete-big:hover {
+        background: #9d2733;
+    }

@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Gestor_Proyectos_Academicos.Models
 {
-    [Table("Proyectos")]
     public class Proyecto
     {
         [Key]
@@ -14,12 +15,14 @@ namespace Gestor_Proyectos_Academicos.Models
 
         public string Descripcion { get; set; }
 
-        [Required]
         public DateTime FechaInicio { get; set; }
 
-        public DateTime? FechaFin { get; set; }
+        public DateTime FechaFin { get; set; }
 
-        [Required]
+        [ForeignKey(nameof(Profesor))]
         public int IdProfesor { get; set; }
+
+        [ValidateNever]
+        public Usuario? Profesor { get; set; }
     }
 }
