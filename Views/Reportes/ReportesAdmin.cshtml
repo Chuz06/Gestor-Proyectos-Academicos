@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "Reportes del Sistema";
+}
+
+<link rel="stylesheet" href="~/css/ReportesAdmin.css" />
+
+<div class="report-container">
+
+    <h2 class="report-title">Reportes del Sistema</h2>
+
+    <!-- USUARIOS-->
+    <section class="report-section">
+        <h3>Usuarios</h3>
+
+        <p><strong>Total:</strong> @ViewBag.TotalUsuarios</p>
+        <p><strong>Administradores:</strong> @ViewBag.Admins</p>
+        <p><strong>Profesores:</strong> @ViewBag.Profesores</p>
+        <p><strong>Estudiantes:</strong> @ViewBag.Estudiantes</p>
+    </section>
+
+    <!-- PROYECTOS -->
+    <section class="report-section">
+        <h3>Proyectos</h3>
+
+        <p><strong>Total:</strong> @ViewBag.TotalProyectos</p>
+        <p><strong>Activos:</strong> @ViewBag.Activos</p>
+        <p><strong>Finalizados:</strong> @ViewBag.Finalizados</p>
+    </section>
+
+    <!-- TAREAS  -->
+    <section class="report-section">
+        <h3>Tareas</h3>
+
+        <p><strong>Total:</strong> @ViewBag.TotalTareas</p>
+        <p><strong>Pendientes:</strong> @ViewBag.Pendientes</p>
+        <p><strong>En Progreso:</strong> @ViewBag.Progreso</p>
+        <p><strong>Completadas:</strong> @ViewBag.Completadas</p>
+    </section>
+
+</div>

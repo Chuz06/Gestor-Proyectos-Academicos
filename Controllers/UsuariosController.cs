@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace Gestor_Proyectos_Academicos.Controllers
 {
     [Authorize(Roles = "Administrador, Profesor")]
@@ -17,7 +16,7 @@ namespace Gestor_Proyectos_Academicos.Controllers
             _context = context;
         }
 
-        //  Usuarios
+        // LISTA
         public async Task<IActionResult> Index()
         {
             var usuarios = await _context.Usuarios
@@ -27,7 +26,7 @@ namespace Gestor_Proyectos_Academicos.Controllers
             return View(usuarios);
         }
 
-        // Usuarios/Details/5
+        // DETALLES
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -41,20 +40,21 @@ namespace Gestor_Proyectos_Academicos.Controllers
             return View(usuario);
         }
 
-        //  Usuarios/Create
+        // GET CREATE
         public IActionResult Create()
         {
             ViewBag.Roles = new SelectList(_context.Roles, "IdRol", "NombreRol");
             return View();
         }
 
+        // POST CREATE
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Usuario usuario)
         {
             if (ModelState.IsValid)
             {
-                //hash de la contraseña
+                // Encripta la contraseña antes de guardar
                 usuario.Contrasena = BCrypt.Net.BCrypt.HashPassword(usuario.Contrasena);
 
                 _context.Add(usuario);
@@ -62,11 +62,26 @@ namespace Gestor_Proyectos_Academicos.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-           
-            return View(usuario); 
+            ViewBag.Roles = new SelectList(_context.Roles, "IdRol", "NombreRol", usuario.IdRol);
+            return View(usuario);
         }
 
-        // edit
+        // GET EDIT
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var usuario = await _context.Usuarios
+                .FirstOrDefaultAsync(u => u.IdUsuario == id);
+
+            if (usuario == null) return NotFound();
+
+            ViewBag.Roles = new SelectList(_context.Roles, "IdRol", "NombreRol", usuario.IdRol);
+
+            return View(usuario);
+        }
+
+        // POST EDIT
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Usuario usuario)
@@ -78,14 +93,13 @@ namespace Gestor_Proyectos_Academicos.Controllers
             {
                 try
                 {
-                    //
+                    // Si NO cambia la contraseña, conservar la original
                     if (!string.IsNullOrWhiteSpace(usuario.Contrasena))
                     {
                         usuario.Contrasena = BCrypt.Net.BCrypt.HashPassword(usuario.Contrasena);
                     }
                     else
                     {
-                        
                         var usuarioOriginal = await _context.Usuarios
                             .AsNoTracking()
                             .FirstOrDefaultAsync(u => u.IdUsuario == id);
@@ -104,13 +118,15 @@ namespace Gestor_Proyectos_Academicos.Controllers
                     else
                         throw;
                 }
+
                 return RedirectToAction(nameof(Index));
             }
 
+            ViewBag.Roles = new SelectList(_context.Roles, "IdRol", "NombreRol", usuario.IdRol);
             return View(usuario);
         }
 
-        //Usuarios/Delete/5
+        // GET DELETE
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -124,12 +140,13 @@ namespace Gestor_Proyectos_Academicos.Controllers
             return View(usuario);
         }
 
-        //  Usuarios/Delete/5
+        // POST DELETE
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var usuario = await _context.Usuarios.FindAsync(id);
+
             if (usuario != null)
             {
                 _context.Usuarios.Remove(usuario);

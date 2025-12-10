@@ -4,32 +4,38 @@
     ViewData["Title"] = "Roles";
 }
 
-<h2>Roles</h2>
+<link rel="stylesheet" href="~/css/RolesCRUD.css" />
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Crear nuevo rol</a>
-</p>
+<div class="section-header">
+    <h2 class="section-title">Roles</h2>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(m => m.First().IdRol)</th>
-            <th>@Html.DisplayNameFor(m => m.First().NombreRol)</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+    <a asp-action="Create" class="btn-create">Crear nuevo rol</a>
+</div>
+
+<div class="card-table-container">
+    <table class="modern-table">
+        <thead>
             <tr>
-                <td>@item.IdRol</td>
-                <td>@item.NombreRol</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.IdRol">Detalles</a> |
-                    <a asp-action="Edit" asp-route-id="@item.IdRol">Editar</a> |
-                    <a asp-action="Delete" asp-route-id="@item.IdRol">Eliminar</a>
-                </td>
+                <th>ID</th>
+                <th>Nombre del Rol</th>
+                <th>Acciones</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.IdRol</td>
+                    <td>@item.NombreRol</td>
+
+                    <td class="actions-cell">
+                        <a asp-action="Details" asp-route-id="@item.IdRol" class="action-btn info">Detalles</a>
+                        <a asp-action="Edit" asp-route-id="@item.IdRol" class="action-btn edit">Editar</a>
+                        <a asp-action="Delete" asp-route-id="@item.IdRol" class="action-btn delete">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

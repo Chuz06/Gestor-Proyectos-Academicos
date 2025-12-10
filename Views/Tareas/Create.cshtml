@@ -1,60 +1,44 @@
 ﻿@model Gestor_Proyectos_Academicos.Models.Tarea
+<link rel="stylesheet" href="~/css/TareasCRUD.css" />
 
-@{
-    ViewData["Title"] = "Crear tarea";
-}
+<h2 class="section-title">Crear tarea</h2>
 
-<h2>Crear nueva tarea</h2>
+<div class="form-card">
+    <form asp-action="Create" method="post">
 
-<form asp-action="Create" method="post">
-    @Html.AntiForgeryToken()
+        <div class="form-group">
+            <label asp-for="Titulo"></label>
+            <input asp-for="Titulo" class="form-input" />
+            <span asp-validation-for="Titulo" class="text-danger"></span>
+        </div>
 
-    <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Descripcion"></label>
+            <textarea asp-for="Descripcion" class="form-input"></textarea>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="Titulo"></label>
-        <input asp-for="Titulo" class="form-control" />
-        <span asp-validation-for="Titulo" class="text-danger"></span>
-    </div>
+        <input type="hidden" asp-for="FechaLimite" />
 
-    <div class="form-group">
-        <label asp-for="Descripcion"></label>
-        <textarea asp-for="Descripcion" class="form-control"></textarea>
-        <span asp-validation-for="Descripcion" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="IdProyecto"></label>
+            <select asp-for="IdProyecto" asp-items="ViewBag.Proyectos" class="form-input"></select>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="FechaLimite"></label>
-        <input asp-for="FechaLimite" type="date" class="form-control" />
-        <span asp-validation-for="FechaLimite" class="text-danger"></span>
-    </div>
+        @if (!User.IsInRole("Estudiante"))
+        {
+            <div class="form-group">
+                <label asp-for="IdAsignadoA"></label>
+                <select asp-for="IdAsignadoA" asp-items="ViewBag.Estudiantes" class="form-input"></select>
+            </div>
+        }
 
-    <!-- ESTADO -->
-    <div class="form-group">
-        <label asp-for="Estado" class="control-label"></label>
-        <select asp-for="Estado" class="form-control" asp-items="ViewBag.Estados"></select>
-        <span asp-validation-for="Estado" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="Estado"></label>
+            <select asp-for="Estado" asp-items="ViewBag.Estados" class="form-input"></select>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="IdProyecto"></label>
-        <select asp-for="IdProyecto" asp-items="ViewBag.Proyectos" class="form-control"></select>
-        <span asp-validation-for="IdProyecto" class="text-danger"></span>
-    </div>
+        <button type="submit" class="btn-guardar">Crear</button>
+        <a asp-action="Index" class="btn-cancel">Volver</a>
 
-    <div class="form-group">
-        <label asp-for="IdAsignadoA"></label>
-        <select asp-for="IdAsignadoA" asp-items="ViewBag.Estudiantes" class="form-control"></select>
-        <span asp-validation-for="IdAsignadoA" class="text-danger"></span>
-    </div>
-
-    <br />
-    <button type="submit" class="btn btn-primary">Crear</button>
-    <a asp-action="Index" class="btn btn-secondary">Volver</a>
-</form>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
+    </form>
+</div>
